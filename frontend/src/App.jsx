@@ -3,7 +3,11 @@ import AuthProvider from "./auth/AuthProvider";
 import { GuestOnlyRoute, ProtectedRoute } from "./auth/routes";
 import LoginPage from "./features/auth/LoginPage";
 import RegisterPage from "./features/auth/RegisterPage";
-import HomePage from "./features/home/HomePage";
+import MembersPage from "./features/teams/MembersPage";
+import MyTeamsPage from "./features/teams/MyTeamsPage";
+import TeamLayout from "./features/teams/TeamLayout";
+import TeamOverviewPage from "./features/teams/TeamOverviewPage";
+import AppLayout from "./layouts/AppLayout";
 
 export default function App() {
   return (
@@ -16,10 +20,16 @@ export default function App() {
           </Route>
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<HomePage />} />
+            <Route element={<AppLayout />}>
+              <Route path="/teams" element={<MyTeamsPage />} />
+              <Route path="/teams/:teamId" element={<TeamLayout />}>
+                <Route index element={<TeamOverviewPage />} />
+                <Route path="members" element={<MembersPage />} />
+              </Route>
+            </Route>
           </Route>
 
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/teams" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

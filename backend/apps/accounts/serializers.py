@@ -53,3 +53,14 @@ class ChangePasswordSerializer(serializers.Serializer):
         user.set_password(self.validated_data["new_password"])
         user.save(update_fields=["password"])
         return user
+
+    
+
+
+
+class PublicUserSerializer(serializers.ModelSerializer):
+    """What teammates can see about each other."""
+
+    class Meta:
+        model = User
+        fields = ["id", "name", "phone", "preferred_position"]
