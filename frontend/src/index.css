@@ -1,5 +1,22 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", ui-sans-serif, system-ui, sans-serif;
+
+  --color-pitch-50: #eefaf2;
+  --color-pitch-100: #d5f2df;
+  --color-pitch-200: #aee4c3;
+  --color-pitch-500: #22a05a;
+  --color-pitch-600: #168447;
+  --color-pitch-700: #12693a;
+  --color-pitch-800: #0f5230;
+  --color-pitch-900: #0b3d24;
+  --color-pitch-950: #052214;
+  --color-chalk: #f7f8f3;
+  --color-lime: #d4ff3a;
+}
+
 body {
-  @apply bg-slate-100 text-slate-900;
+  @apply bg-chalk font-sans text-slate-900 antialiased;
 }
