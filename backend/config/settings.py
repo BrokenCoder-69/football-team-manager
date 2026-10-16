@@ -55,8 +55,15 @@ INSTALLED_APPS = [
     # Third-party
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+
+
+
     # Our apps
     "apps.accounts",
+    "apps.core",
+    "apps.teams",
+
+
 ]
 
 MIDDLEWARE = [
@@ -163,6 +170,12 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "auth": "20/min",  # slows down password guessing on login/register
     },
+
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 50,
+
+
+
 }
 
 SIMPLE_JWT = {

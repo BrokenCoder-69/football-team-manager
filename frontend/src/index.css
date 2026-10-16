@@ -15,8 +15,69 @@
   --color-pitch-950: #052214;
   --color-chalk: #f7f8f3;
   --color-lime: #d4ff3a;
+
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-fade-in: fade-in 1s ease-out both;
+  --animate-draw: draw 2.4s cubic-bezier(0.65, 0, 0.35, 1) both;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-drift: drift 16s ease-in-out infinite alternate;
+  --animate-fill: fill 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shake: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to   { stroke-dashoffset: 0; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50%      { transform: translateY(-12px) rotate(0.5deg); }
+}
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(60px, -40px) scale(1.15); }
+}
+@keyframes fill {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes shake {
+  10%, 90%      { transform: translateX(-1px); }
+  20%, 80%      { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60%      { transform: translateX(4px); }
 }
 
 body {
   @apply bg-chalk font-sans text-slate-900 antialiased;
+}
+
+/* Children of .stagger slide in one after another. */
+@layer components {
+  .stagger > * { animation: var(--animate-fade-up); }
+  .stagger > :nth-child(1) { animation-delay: 60ms; }
+  .stagger > :nth-child(2) { animation-delay: 130ms; }
+  .stagger > :nth-child(3) { animation-delay: 200ms; }
+  .stagger > :nth-child(4) { animation-delay: 270ms; }
+  .stagger > :nth-child(5) { animation-delay: 340ms; }
+  .stagger > :nth-child(6) { animation-delay: 410ms; }
+  .stagger > :nth-child(7) { animation-delay: 480ms; }
+  .stagger > :nth-child(8) { animation-delay: 550ms; }
+}
+
+/* Respect people who turn off animations in their OS settings. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
