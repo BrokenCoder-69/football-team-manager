@@ -1,23 +1,27 @@
-import { useEffect, useState } from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
+import AuthProvider from "./auth/AuthProvider";
+import { GuestOnlyRoute, ProtectedRoute } from "./auth/routes";
+import LoginPage from "./features/auth/LoginPage";
+import RegisterPage from "./features/auth/RegisterPage";
+import HomePage from "./features/home/HomePage";
 
-function App() {
-  const [status, setStatus] = useState("checking...");
-
-  useEffect(() => {
-    fetch("/api/v1/health/")
-      .then((response) => response.json())
-      .then((data) => setStatus(data.status))
-      .catch(() => setStatus("unreachable"));
-  }, []);
-
+export default function App() {
   return (
-    <main>
-      <h1>⚽ Football Team Manager</h1>
-      <p>
-        Backend status: <strong>{status}</strong>
-      </p>
-    </main>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route element={<GuestOnlyRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<HomePage />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
-
-export default App;
