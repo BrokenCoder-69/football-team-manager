@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import * as authApi from "../api/auth";
 import { setSessionExpiredHandler } from "../api/client";
+import { queryClient } from "../lib/queryClient";
 import { AuthContext } from "./context";
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  // "loading" until we know whether a session exists; then
-  // "authenticated" or "anonymous".
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     setSessionExpiredHandler(() => {
+      queryClient.clear();
       setUser(null);
       setStatus("anonymous");
     });
@@ -37,6 +37,7 @@ export default function AuthProvider({ children }) {
 
   async function logout() {
     await authApi.logout();
+    queryClient.clear();
     setUser(null);
     setStatus("anonymous");
   }
