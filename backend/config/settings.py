@@ -8,13 +8,25 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
-"""
 
+"""
+from datetime import timedelta
 import os
 from pathlib import Path
 
 import dj_database_url
 from dotenv import load_dotenv
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,10 +52,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
+    # Third-party
     "rest_framework",
-
-
+    "rest_framework_simplejwt.token_blacklist",
+    # Our apps
+    "apps.accounts",
 ]
 
 MIDDLEWARE = [
@@ -124,3 +137,43 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+
+
+
+# ---------------------------------------------------------------------------
+# Accounts and API
+# ---------------------------------------------------------------------------
+
+AUTH_USER_MODEL = "accounts.User"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    # Locked by default: every endpoint needs a login unless it opts out.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.ScopedRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "auth": "20/min",  # slows down password guessing on login/register
+    },
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ROTATE_REFRESH_TOKENS": True,       # every refresh gives a new refresh token
+    "BLACKLIST_AFTER_ROTATION": True,    # ...and the old one stops working
+    "UPDATE_LAST_LOGIN": True,
+}
+
+# The refresh token lives in an httpOnly cookie that JavaScript can't read
+# (design §3.5). It is only sent to the auth endpoints.
+REFRESH_COOKIE_NAME = "refresh_token"
+REFRESH_COOKIE_PATH = "/api/v1/auth/"
